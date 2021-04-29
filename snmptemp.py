@@ -12,9 +12,9 @@ version      = 2
 
 # RRD Consts
 rrd_filename = 'db.rrd' 
-step         = 2
-# heartbeat    = (step * 20) // 100
-heartbeat    = 1
+step         = 1
+heartbeat    = step + ((step * 20) // 100)
+# heartbeat    = 6
 min_temp     = 0
 max_temp     = 100
 min_usage    = 0
@@ -59,7 +59,7 @@ def create_rrd(temps, loads):
         ds_rra.append(make_ds(temp, heartbeat, min_temp, max_temp))
     for load in loads:
         ds_rra.append(make_ds(load, heartbeat, min_usage, max_usage))
-    ds_rra.append(make_rra('AVERAGE', 0.5, 2, 60))
+    ds_rra.append(make_rra('AVERAGE', 0.5, 1, 60))
     for a in ds_rra:
         print(a)
     rrdtool.create(*ds_rra)
